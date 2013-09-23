@@ -1,0 +1,12 @@
+{application, game_svr,
+ [
+  {description, ""},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {mod, { game_svr_app, []}},
+  {env, []}
+ ]}.
