@@ -4,7 +4,7 @@
 -behaviour(supervisor).
 
 %% API
--export([start_link/0]).
+-export([start_link/0,start_child/5]).
 
 %% Supervisor callbacks
 -export([init/1]).
@@ -18,6 +18,19 @@
 
 start_link() ->
     supervisor:start_link({local, ?MODULE}, ?MODULE, []).
+
+
+start_child(transient,infinity,supervisor,Mod, Args) ->
+    {ok, _} = supervisor:start_child(?MODULE,
+                                     {Mod, {Mod, start_link, Args},
+                                      transient, infinity, supervisor, [Mod]}),
+    ok;
+
+start_child(permanent,supervisor,Mod,Args,Time) ->
+    {ok, _} = supervisor:start_child(?MODULE,
+                                     {Mod, {Mod, start_link, Args},
+                                      permanent, Time, supervisor, [Mod]}),
+    ok.
 
 %% ===================================================================
 %% Supervisor callbacks

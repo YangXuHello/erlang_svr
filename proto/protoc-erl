@@ -1,0 +1,15 @@
+#!/usr/bin/env escript
+%% -*- erlang -*-
+%%! -sasl errlog_type error -boot start_sasl
+
+main ([File,Output_include_dir]) ->
+  io:format("Lengh: ~p~n", [length([File,Output_include_dir])]),
+  io:format("SString is ~p~n", [[File,Output_include_dir]]),
+  protobuffs_compile:generate_source (File,[{output_include_dir,Output_include_dir}]);
+main ([File]) ->
+  protobuffs_compile:generate_source (File);
+main (_) ->
+  io:format ("usage: ~s <protofile>~n",
+             [filename:basename (escript:script_name())]),
+  halt(1).
+
