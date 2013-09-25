@@ -1,0 +1,11 @@
+package Header;
+
+enum MsgType{
+	login_in = 1;	
+}
+
+message Header {
+	optional fixed32 len = 1;
+	optional MsgType type = 2;
+}
+
