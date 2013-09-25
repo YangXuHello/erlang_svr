@@ -10,12 +10,13 @@
 -include("common.hrl").
 
 start_link(AcceptorCount, Port) ->
-    gen_server:start_link(?MODULE, {AcceptorCount, Port}, []).
+    gen_server:start_link({local,?MODULE},?MODULE,{AcceptorCount, Port}, []).
 
 init({AcceptorCount, Port}) ->
     process_flag(trap_exit, true), %%stop the exit signal propagating.
     case gen_tcp:listen(Port, ?TCP_OPTIONS) of
         {ok, LSock} ->
+            error_logger:info_msg("game_tcp_listener gen_tcp:listen port is ~p,alloc socket is ~p ~n",[Port,LSock]),
             lists:foreach(fun (_) ->
                                 {ok, _APid} = game_tcp_acceptor_sup:start_child([LSock])
                           end,

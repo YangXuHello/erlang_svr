@@ -21,26 +21,30 @@ handle_call(_Request, _From, State) ->
     {reply, ok, State}.
 
 handle_cast(accept, State) ->
+    error_logger:info_msg("game_tcp_acceptor handle_cast(accept, State) ~n"),
     accept(State);
 
 handle_cast(_Msg, State) ->
     {noreply, State}.
 
 handle_info({inet_async, LSock, Ref, {ok, Sock}}, State = #state{sock=LSock, ref=Ref}) ->
+    error_logger:info_msg("game_tcp_acceptor handle_info({inet_async, LSock, Ref, {ok, Sock}},_) ~n"),
     case set_sockopt(LSock, Sock) of
         ok -> ok;
         {error, Reason} -> exit({set_sockopt, Reason})
     end,
-    start_player(Sock),
+    %%start_player(Sock),
     accept(State);
 
 handle_info({inet_async, LSock, Ref, {error, closed}}, State=#state{sock=LSock, ref=Ref}) ->
+    error_logger:warning_msg("game_tcp_acceptor handle_info({inet_async, LSock, Ref, {error, closed}},_) ~n"),
     {stop, normal, State};
 
 handle_info(_Info, State) ->
     {noreply, State}.
 
 terminate(_Reason, State) ->
+    error_logger:warning_msg("game_tcp_acceptor terminate Reason is ~p ~n",[_Reason]),
     gen_tcp:close(State#state.sock),
     ok.
 
@@ -66,9 +70,10 @@ set_sockopt(LSock, Sock) ->
 
 
 accept(State = #state{sock=LSock}) ->
+    error_logger:info_msg("game_tcp_acceptor accept LSock is ~p ~n",[LSock]),
     case prim_inet:async_accept(LSock, -1) of
         {ok, Ref} -> {noreply, State#state{ref=Ref}};
-        Error     -> {stop, {cannot_accept, Error}, State}
+        {error, Ref} -> {stop, {cannot_accept,  inet:format_error(Ref)}, State}        
     end.
 
 %% 开启客户端服务

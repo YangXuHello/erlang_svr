@@ -2,7 +2,7 @@
 
 %%服务IP和端口
 -define(HOST, "localhost").
--define(PORT, 6666).
+-define(PORT, 32616).
 -define(GAYEWAY_POST, 5555).
 
 %%安全校验

@@ -9,7 +9,7 @@
 
 -export([start_link/0, init/1]).
 
-start_child(LSock)->
+start_child([LSock])->
 	supervisor:start_child(?MODULE, [LSock]).
 
 start_link() ->

@@ -20,17 +20,15 @@ start_link() ->
     supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 
 
-start_child(transient,infinity,supervisor,Mod, Args) ->
-    {ok, _} = supervisor:start_child(?MODULE,
-                                     {Mod, {Mod, start_link, Args},
-                                      transient, infinity, supervisor, [Mod]}),
-    ok;
+start_child(transient,infinity,supervisor,Mod, Args)->
+    supervisor:start_child(?MODULE,
+                              {Mod, {Mod, start_link, Args},
+                              transient, infinity, supervisor, [Mod]});
 
-start_child(permanent,supervisor,Mod,Args,Time) ->
-    {ok, _} = supervisor:start_child(?MODULE,
-                                     {Mod, {Mod, start_link, Args},
-                                      permanent, Time, supervisor, [Mod]}),
-    ok.
+start_child(permanent,supervisor,Mod,Args,Time)->
+    supervisor:start_child(?MODULE,
+                              {Mod, {Mod, start_link, Args},
+                              permanent, Time, supervisor, [Mod]}).  
 
 %% ===================================================================
 %% Supervisor callbacks
