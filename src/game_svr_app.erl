@@ -12,6 +12,7 @@
 
 start(_StartType, _StartArgs) ->
     {ok, SupPid} = game_svr_sup:start_link(),
+    start_player(),
     start_tcp(?PORT),
     {ok, SupPid}.
 
@@ -21,4 +22,9 @@ stop(_State) ->
 %%开启tcp listener监控树
 start_tcp(Port) ->
     {ok,_} = game_svr_sup:start_child(transient,infinity,supervisor,game_tcp_listener_sup,[Port]),
+    ok.
+
+%%开启player监控树
+start_player() ->
+	{ok,_} = game_svr_sup:start_child(transient,infinity,supervisor,game_tcp_player_sup,[]),
     ok.

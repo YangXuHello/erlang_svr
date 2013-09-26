@@ -5,7 +5,7 @@ enum MsgType{
 }
 
 message Header {
-	optional fixed32 len = 1;
-	optional MsgType type = 2;
+	optional sfixed32 type = 1;
+	optional sfixed32 size = 2;
 }
 

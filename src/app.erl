@@ -1,16 +1,14 @@
--module(gate_svr_app).
-
--behaviour(application).
+-module(app).
 
 %% Application callbacks
--export([start/2, stop/1]).
+-export([go/0]).
+-include("common.hrl").
 
 %% ===================================================================
 %% Application callbacks
 %% ===================================================================
 
-start(_StartType, _StartArgs) ->
-    gate_svr_sup:start_link().
-
-stop(_State) ->
-    ok.
+go()->
+	reloader:start(),
+	application:start(sasl),
+	application:start(game_svr).

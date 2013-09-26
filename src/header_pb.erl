@@ -12,7 +12,7 @@
 
 -export([encode/1, decode/2, delimited_decode/2]).
 
--record(header, {len, type}).
+-record(header, {type, size}).
 
 encode([]) -> [];
 encode(Records) when is_list(Records) ->
@@ -41,9 +41,9 @@ delimited_encode(Records) ->
 
 iolist(header, Record) ->
     [pack(1, optional,
-	  with_default(Record#header.len, none), fixed32, []),
+	  with_default(Record#header.type, none), sfixed32, []),
      pack(2, optional,
-	  with_default(Record#header.type, none), msgtype, [])].
+	  with_default(Record#header.size, none), sfixed32, [])].
 
 with_default(Default, Default) -> undefined;
 with_default(Val, _) -> Val.
@@ -114,7 +114,8 @@ delimited_decode(Type, Bytes, Acc) ->
 
 decode(enummsg_values, 1) -> value1;
 decode(header, Bytes) when is_binary(Bytes) ->
-    Types = [{2, type, msgtype, []}, {1, len, fixed32, []}],
+    Types = [{2, size, sfixed32, []},
+	     {1, type, sfixed32, []}],
     Defaults = [],
     Decoded = decode(Bytes, Types, Defaults),
     to_record(header, Decoded).

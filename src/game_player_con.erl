@@ -10,7 +10,7 @@
 -define(TCP_TIMEOUT, 1000). % 解析协议超时时间
 -define(HEART_TIMEOUT, 60000). % 心跳包超时时间
 -define(HEART_TIMEOUT_TIME, 0). % 心跳包超时次数
--define(HEADER_LENGTH, 8). % 消息头长度
+-define(HEADER_LENGTH, 10). % 消息头长度
 
 %%记录客户端进程
 -record(client, {
@@ -45,12 +45,17 @@ init() ->
 %%Socket：socket id
 %%Client: client记录
 login_parse_packet(Socket, Client) ->
+    error_logger:info_msg("game_player_con login_parse_packet recv msg Socket is ~p ~n",[Socket]),
     Ref = async_recv(Socket, ?HEADER_LENGTH, ?HEART_TIMEOUT),
+    %error_logger:info_msg("game_player_con receive info"),
     receive
         %%登陆处理
-        {inet_async, Socket, Ref, {ok, <<Data>>}} ->
+        {inet_async, Socket, Ref, {ok, Data}} ->           
             Pack_Header = header_pb:decode_header(Data),
-            BodyLen = Pack_Header#header.len - ?HEADER_LENGTH;
+            %<<Type:16,Len:16>> = Pack_Header#header.info,
+            error_logger:info_msg("game_player_con login_parse_packet rev a pack type is ~p,size is ~p~n",
+                [Pack_Header#header.type,Pack_Header#header.size]),
+            BodyLen = Pack_Header#header.size - ?HEADER_LENGTH;
             % case BodyLen > 0 of
             %     true ->
             %         Ref1 = async_recv(Socket, BodyLen, ?TCP_TIMEOUT),
@@ -91,6 +96,7 @@ login_parse_packet(Socket, Client) ->
 
         %%超时处理
         {inet_async, Socket, Ref, {error,timeout}} ->
+            error_logger:info_msg("game_player_con login_parse_packet {inet_async, Socket, Ref, {error,timeout}}"),
             % case Client#client.timeout >= ?HEART_TIMEOUT_TIME of
             %     true ->
             %         login_lost(Socket, Client, 0, {error,timeout});
@@ -101,6 +107,7 @@ login_parse_packet(Socket, Client) ->
             dummy;
         %%用户断开连接或出错
         Other ->
+            error_logger:info_msg("game_player_con login_parse_packet Other is ~p~n!",[Other]),
             dummy
             % login_lost(Socket, Client, 0, Other)
     end.

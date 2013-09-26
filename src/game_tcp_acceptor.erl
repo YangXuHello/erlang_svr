@@ -33,7 +33,7 @@ handle_info({inet_async, LSock, Ref, {ok, Sock}}, State = #state{sock=LSock, ref
         ok -> ok;
         {error, Reason} -> exit({set_sockopt, Reason})
     end,
-    %%start_player(Sock),
+    start_player(Sock),
     accept(State);
 
 handle_info({inet_async, LSock, Ref, {error, closed}}, State=#state{sock=LSock, ref=Ref}) ->
