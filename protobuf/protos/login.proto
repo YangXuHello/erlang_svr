@@ -1,0 +1,48 @@
+package ProtoBuf_Packet;
+ 
+message Loginin_Require{
+	optional string user = 1;
+	optional string password = 2;
+}
+
+message Loginin_Respond{
+	optional bool success = 1;
+}
+
+message Role_List_Require{
+	
+}
+
+message Role_List_Respond{
+	optional int32 		roleSize 		= 1;
+	optional int32  	id				= 2;
+	optional string 	nickname  		= 3;
+	optional int32 		career  		= 4;
+}
+
+message Create_Role_Require{
+	optional string 	nickname  		= 1;
+	optional int32 		career  		= 2;
+}
+
+message Create_Role_Respond{
+	optional int32 		resultCode  	= 1;	
+}
+
+message Notify_Sec_Loginin{							//login in other places.	
+}
+
+message Enter_World_Require{
+	optional int32 		id  			= 1;
+}
+
+message Enter_World_Respond{
+	optional int32 		resultCode  	= 1;	
+}
+
+message Leave_World_Require{
+}
+
+message Leave_World_Respond{
+	
+}

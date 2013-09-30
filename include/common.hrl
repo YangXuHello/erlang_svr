@@ -19,15 +19,20 @@
 %%错误处理
 -define(DEBUG(F, A), util:log("debug", F, A, ?MODULE, ?LINE)).
 -define(INFO(F, A), util:log("info", F, A, ?MODULE, ?LINE)).
+-define(WARN(F, A), util:log("warn", F, A, ?MODULE, ?LINE)).
 -define(ERR(F, A), util:log("error", F, A, ?MODULE, ?LINE)).
+-define(DEBUG(F), util:log("debug", F, [], ?MODULE, ?LINE)).
+-define(INFO(F), util:log("info", F, [], ?MODULE, ?LINE)).
+-define(WARN(F), util:log("warn", F, [], ?MODULE, ?LINE)).
+-define(ERR(F), util:log("error", F, [], ?MODULE, ?LINE)).
 
 %%数据库连接
--define(DB, sd_mysql_conn).
+-define(DB, f_mysql_conn).
 -define(DB_HOST, "localhost").
 -define(DB_PORT, 3306).
--define(DB_USER, "sdzmmo").
--define(DB_PASS, "sdzmmo123456").
--define(DB_NAME, "sdzmmo").
+-define(DB_USER, "yangxu").
+-define(DB_PASS, "yx8523").
+-define(DB_NAME, "fgamedb").
 -define(DB_ENCODE, utf8).
 
 -define(DIFF_SECONDS_1970_1900, 2208988800).

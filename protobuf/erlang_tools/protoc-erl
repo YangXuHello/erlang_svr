@@ -7,6 +7,7 @@ find_files(Dir, Regex, Recursive) ->
                        fun(F, Acc) -> [F | Acc] end, []).
 
 generateErlangProto([File | Rest],Output_include_dir,Output_src_dir)->
+  error_logger:info_msg("generateErlangProto file name is ~p~n",[File]),
 	protobuffs_compile:generate_source (File,[{output_include_dir,Output_include_dir},{output_src_dir,Output_src_dir}]),
 	generateErlangProto(Rest,Output_include_dir,Output_src_dir);
 generateErlangProto([],_,_)->
@@ -22,11 +23,12 @@ main ([Dir,Output_include_dir,Output_src_dir]) ->
   		generateErlangProto(FoundFiles,Output_include_dir,Output_src_dir)
   end;
 main ([]) ->
-  case find_files("./", ".*\\.proto$",true) of
+  application:start(sasl),
+  case find_files("../protos", ".*\\.proto$",false) of
   	[]->
   		ok;
   	FoundFiles->
-  		generateErlangProto(FoundFiles,"../include","../src")
+  		generateErlangProto(FoundFiles,"../../include","../../src")
   end;
 main ([File]) ->
   protobuffs_compile:generate_source (File);

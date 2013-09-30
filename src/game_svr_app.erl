@@ -12,12 +12,18 @@
 
 start(_StartType, _StartArgs) ->
     {ok, SupPid} = game_svr_sup:start_link(),
+    start_kernel(),
     start_player(),
     start_tcp(?PORT),
     {ok, SupPid}.
 
 stop(_State) ->
     ok.
+
+%%开启核心服务
+start_kernel() ->
+	{ok,_} = game_svr_sup:start_child(permanent,supervisor,srv_kernel,[],10000),
+    ok.    
 
 %%开启tcp listener监控树
 start_tcp(Port) ->

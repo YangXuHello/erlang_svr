@@ -1,0 +1,20 @@
+package ProtoBuf_Packet;
+ 
+enum MsgType{
+	loginin_require 				= 1;
+	loginin_respond 				= 2;	
+	role_list_require 				= 3;
+	role_list_respond 				= 4;
+	create_role_require 			= 5;
+	create_role_respond 			= 6;
+	notify_sec_loginin				= 7;
+	enter_world_require				= 8;
+	enter_world_respond				= 9;
+	leave_world_require				= 10;
+	leave_world_respond				= 11;	
+}
+
+message Header{
+	optional sfixed32 type = 1;
+	optional sfixed32 size = 2;
+}
